@@ -1,0 +1,22 @@
+2026-07-11 17:55:27 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-11 17:55:28 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-11 17:55:28 - [Main] - INFO - System started working!
+2026-07-11 17:55:28 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-11 17:55:28 - [GeminiAgent] - ERROR - An error occured while agent was working: 'module' object is not callable
+2026-07-11 17:55:28 - [Main] - INFO - System completed working!.
+2026-07-11 18:00:06 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-11 18:00:06 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-11 18:00:06 - [Main] - INFO - System started working!
+2026-07-11 18:00:06 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-11 18:00:07 - [GeminiAgent] - INFO - User query: What is the weather in Antalya?
+2026-07-11 18:00:07 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-11 18:00:07 - [GeminiAgent] - ERROR - An error occured while agent was working: 'Chat' object has no attribute 'send'
+2026-07-11 18:00:07 - [Main] - INFO - System completed working!.
+2026-07-11 18:00:48 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-11 18:00:48 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-11 18:00:48 - [Main] - INFO - System started working!
+2026-07-11 18:00:48 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-11 18:00:49 - [GeminiAgent] - INFO - User query: What is the weather in Antalya?
+2026-07-11 18:00:49 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-11 18:00:51 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-07-11 18:00:51 - [Main] - INFO - System completed working!.
