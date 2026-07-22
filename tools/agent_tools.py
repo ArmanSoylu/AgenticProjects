@@ -1,7 +1,7 @@
 import requests
 import uuid
 from simpleeval import simple_eval
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 
 from core.logger import get_logger
 from database.vector_db import collection

@@ -20,3 +20,63 @@
 2026-07-11 18:00:49 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
 2026-07-11 18:00:51 - [GeminiAgent] - INFO - Agent has created and answered successfully
 2026-07-11 18:00:51 - [Main] - INFO - System completed working!.
+2026-07-12 17:08:45 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-12 17:08:46 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-12 17:09:53 - [FastAPIServer] - INFO - A new query arrived to API What is the temperture for today for Karlsruhe
+2026-07-12 17:09:53 - [FastAPIServer] - ERROR - An  API error occured: run_reAct_agent() missing 1 required positional argument: 'tools'
+2026-07-12 17:09:57 - [FastAPIServer] - INFO - A new query arrived to API What is the temperture for today for Karlsruhe
+2026-07-12 17:09:57 - [FastAPIServer] - ERROR - An  API error occured: run_reAct_agent() missing 1 required positional argument: 'tools'
+2026-07-12 17:10:52 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-12 17:10:52 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-12 17:11:09 - [FastAPIServer] - INFO - A new query arrived to API What is the temperture for today for Karlsruhe
+2026-07-12 17:11:09 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-12 17:11:10 - [GeminiAgent] - INFO - User query: What is the temperture for today for Karlsruhe
+2026-07-12 17:11:10 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-12 17:11:22 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-07-12 17:11:22 - [FastAPIServer] - INFO - The API is sending the answer.
+2026-07-12 17:12:42 - [FastAPIServer] - INFO - A new query arrived to API what is my name and my fav game 
+2026-07-12 17:12:42 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-12 17:12:42 - [GeminiAgent] - INFO - User query: what is my name and my fav game 
+2026-07-12 17:12:42 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-12 17:13:13 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-07-12 17:13:13 - [FastAPIServer] - INFO - The API is sending the answer.
+2026-07-12 17:35:41 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-12 17:35:41 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-12 17:37:51 - [FastAPIServer] - INFO - A new query arrived to API what is the weather for Antalya right now 
+2026-07-12 17:37:51 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-12 17:37:52 - [GeminiAgent] - INFO - User query: what is the weather for Antalya right now 
+2026-07-12 17:37:52 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-12 17:38:29 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-07-12 17:38:29 - [FastAPIServer] - INFO - The API is sending the answer.
+2026-07-12 17:40:14 - [FastAPIServer] - INFO - A new query arrived to API what is the password to open Dr. Thorne's safe? and Why did the miners' eyes turn purple on Zephyria also 
+If I want to find the Omega Alliance files, who should I talk to and where should I go
+
+2026-07-12 17:40:14 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-12 17:40:15 - [GeminiAgent] - INFO - User query: what is the password to open Dr. Thorne's safe? and Why did the miners' eyes turn purple on Zephyria also 
+If I want to find the Omega Alliance files, who should I talk to and where should I go
+
+2026-07-12 17:40:15 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-12 17:40:34 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-07-12 17:40:34 - [FastAPIServer] - INFO - The API is sending the answer.
+2026-07-12 21:31:36 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-12 21:31:36 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-12 21:33:07 - [FastAPIServer] - INFO - A new query arrived to API What is the temperture for Trabzon
+2026-07-12 21:33:07 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-12 21:33:09 - [GeminiAgent] - INFO - User query: What is the temperture for Trabzon
+2026-07-12 21:33:09 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-12 21:33:29 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-07-12 21:33:29 - [FastAPIServer] - INFO - The API is sending the answer.
+2026-07-12 21:33:51 - [FastAPIServer] - INFO - A new query arrived to API what is 22 divided by 2
+2026-07-12 21:33:51 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-12 21:33:52 - [GeminiAgent] - INFO - User query: what is 22 divided by 2
+2026-07-12 21:33:52 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-12 21:34:25 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-07-12 21:34:25 - [FastAPIServer] - INFO - The API is sending the answer.
+2026-07-22 14:25:56 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-07-22 14:26:00 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-07-22 14:26:07 - [FastAPIServer] - INFO - A new query arrived to API what is the temperture at Karlsruhe
+2026-07-22 14:26:07 - [GeminiAgent] - INFO - Starting Gemini Agent...
+2026-07-22 14:26:08 - [GeminiAgent] - INFO - User query: what is the temperture at Karlsruhe
+2026-07-22 14:26:08 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-07-22 14:26:09 - [GeminiAgent] - ERROR - An error occured while agent was working: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+2026-07-22 14:26:09 - [FastAPIServer] - INFO - The API is sending the answer.

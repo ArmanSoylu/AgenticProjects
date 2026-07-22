@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+streamlit
+google-genai
+chromadb
+requests
+simpleeval
+duckduckgo-search
+pydantic
+mcp

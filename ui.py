@@ -29,7 +29,7 @@ if prompt := st.chat_input("Ask a question to the Agent..."):
         with st.spinner("The Dreamer is thinking"):
             try:
                 #connect to fast api server
-                api_url = "http://127.0.0.1:8000/chat"
+                api_url = "http://backend:8000/chat"
 
                 #check with pydantic if the content is valid
                 payload = {"query": prompt}

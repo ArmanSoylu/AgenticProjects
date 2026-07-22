@@ -25,7 +25,7 @@ def run_reAct_agent(user_query: str, tools: list):
             temperature=0.1
         )
 
-        chat = client.chats.create(model="gemini-3.5-flash", config=config)
+        chat = client.chats.create(model="gemini-3.5-flash-lite", config=config)
 
         logger.info(f"User query: {user_query}")
         logger.info("Agent is thinking and starting up the tools")
