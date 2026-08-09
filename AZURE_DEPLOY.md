@@ -17,6 +17,14 @@ Genel Azure rehberlerindeki komutlar bu projede olduğu gibi çalışmaz:
 | GHCR yolu | `darkmonger` | **`armansoylu`** — GHCR sadece küçük harf kabul eder |
 | Replica sayısı | `--max-replicas 2` | **`--max-replicas 1`** — sohbet geçmişi (`agent/sessions.py`) process içi bellekte; ikinci replica geçmişi rastgele düşürür |
 
+### Bölge
+
+**Azure for Students** aboneliğinde bir politika var: sadece şu bölgelere deploy edilebiliyor —
+`germanywestcentral`, `francecentral`, `switzerlandnorth`, `spaincentral`, `italynorth`.
+
+`westeurope` denenirse `RequestDisallowedByAzure` hatası gelir. Karlsruhe'ye en yakın olan
+**germanywestcentral** seçildi.
+
 ---
 
 ## 0. Önce bütçe alarmı
@@ -64,13 +72,13 @@ az provider register --namespace Microsoft.App
 ```
 
 ```bash
-az group create --name rg-dreamer --location westeurope
+az group create --name rg-dreamer --location germanywestcentral
 ```
 
 `--logs-destination none` önemli: varsayılan davranış bir Log Analytics workspace açar, o da kotandan yer.
 
 ```bash
-az containerapp env create --name env-dreamer --resource-group rg-dreamer --location westeurope --logs-destination none
+az containerapp env create --name env-dreamer --resource-group rg-dreamer --location germanywestcentral --logs-destination none
 ```
 
 ## 4. Deploy
@@ -82,7 +90,7 @@ Bu komut anahtarı shell geçmişine yazar; sonrasında geçmişi temizlemek ist
 az containerapp create --name dreamer --resource-group rg-dreamer --environment env-dreamer --image ghcr.io/armansoylu/dreamer-api:latest --target-port 7860 --ingress external --min-replicas 0 --max-replicas 1 --cpu 1.0 --memory 2.0Gi --secrets gemini-key=<ANAHTAR> --env-vars gemini_api_key=secretref:gemini-key
 ```
 
-Çıktıdaki FQDN sitenin adresi: `https://dreamer.<hash>.westeurope.azurecontainerapps.io`
+Çıktıdaki FQDN sitenin adresi: `https://dreamer.<hash>.germanywestcentral.azurecontainerapps.io`
 
 ## 5. Sonraki güncellemeler
 
