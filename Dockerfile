@@ -25,4 +25,7 @@ ENV AGENT_DB_PATH=/app/agent_memory_db
 ENV PORT=7860
 EXPOSE 7860
 
-CMD uvicorn server:app --host 0.0.0.0 --port ${PORT}
+# ${PORT} genişlemesi için shell gerekiyor, ama `exec` olmadan uvicorn sh'ın
+# çocuğu kalır ve SIGTERM ona ulaşmaz — Container Apps sıfıra inerken
+# konteyner düzgün kapanmaz. `exec` sh'ın yerine uvicorn'u geçiriyor.
+CMD ["sh", "-c", "exec uvicorn server:app --host 0.0.0.0 --port ${PORT}"]
