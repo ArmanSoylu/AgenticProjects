@@ -34,24 +34,30 @@ FRONTEND_DIR = BASE_DIR / "frontend"
 
 # UI model id -> real Gemini model. The picker in the chat header sends the
 # left-hand id; everything below is what actually reaches the API.
+# "free_tier": whether an AI Studio key without billing can actually call it.
+# Pro-class models answer 429 RESOURCE_EXHAUSTED on the free tier, so the picker
+# shows them but will not let anyone select one.
 MODELS = [
     {
         "id": "flash-lite",
         "name": "Flash-Lite",
         "gemini_model": os.environ.get("MODEL_FLASH_LITE", "gemini-3.5-flash-lite"),
         "latency": "~0.4s",
+        "free_tier": True,
     },
     {
         "id": "flash",
         "name": "Flash",
         "gemini_model": os.environ.get("MODEL_FLASH", "gemini-3.5-flash"),
         "latency": "~1.2s",
+        "free_tier": True,
     },
     {
         "id": "pro",
         "name": "Pro",
         "gemini_model": os.environ.get("MODEL_PRO", "gemini-pro-latest"),
         "latency": "~3.0s",
+        "free_tier": os.environ.get("GEMINI_BILLING_ENABLED", "").lower() == "true",
     },
 ]
 

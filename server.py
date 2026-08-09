@@ -14,7 +14,7 @@ from agent.gemini_core import run_reAct_agent, run_agent_turn
 from agent.registry import public_agents, get_agent
 from agent.sessions import sessions
 from tools.agent_tools import api_tools, search_vector_database
-from core.config import MODELS, DEFAULT_MODEL_ID, FRONTEND_DIR
+from core.config import MODELS, MODEL_BY_ID, DEFAULT_MODEL_ID, FRONTEND_DIR
 from core.logger import get_logger
 
 logger = get_logger("FastAPIServer")
@@ -90,6 +90,16 @@ def chat(request: AgentChatRequest):
     if agent["status"] != "live" or not agent["callables"]:
         raise HTTPException(
             status_code=409, detail=f"Agent '{request.agent}' is still in development."
+        )
+
+    model = MODEL_BY_ID.get(request.model)
+    if model is not None and not model["free_tier"]:
+        raise HTTPException(
+            status_code=402,
+            detail=(
+                f"{model['name']} needs a Gemini plan with billing enabled. "
+                f"Pick Flash-Lite or Flash."
+            ),
         )
 
     session_id = request.session_id or str(uuid.uuid4())

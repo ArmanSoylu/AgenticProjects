@@ -21,6 +21,7 @@ window.STR = {
     models: {
       title: 'Model choice by task',
       body: 'The picker at the top right of each chat swaps the model to match the weight of the request. Short questions go to the fast model, multi-step work to the big one.',
+      paidOnly: 'needs a paid Gemini plan',
     },
     notes: { 'flash-lite': 'Fast · short tasks', flash: 'Balanced · multi-step flows', pro: 'Complex work · long context' },
     chat: {
@@ -66,6 +67,7 @@ window.STR = {
     models: {
       title: 'Modellwahl je Aufgabe',
       body: 'Die Auswahl oben rechts in jedem Chat wechselt das Modell passend zum Gewicht der Anfrage. Kurze Fragen gehen an das schnelle Modell, mehrstufige Aufgaben an das große.',
+      paidOnly: 'braucht einen kostenpflichtigen Gemini-Plan',
     },
     notes: { 'flash-lite': 'Schnell · kurze Aufgaben', flash: 'Ausgewogen · mehrstufige Abläufe', pro: 'Komplexe Aufgaben · langer Kontext' },
     chat: {
@@ -111,6 +113,7 @@ window.STR = {
     models: {
       title: 'Göreve göre model seçimi',
       body: 'Her sohbetin sağ üstündeki seçici, isteğin ağırlığına göre modeli değiştirir. Kısa sorular hızlı modele, çok adımlı görevler büyük modele gider.',
+      paidOnly: 'ücretli Gemini planı gerekir',
     },
     notes: { 'flash-lite': 'Hızlı · kısa görevler', flash: 'Dengeli · çok adımlı akış', pro: 'Karmaşık görev · uzun bağlam' },
     chat: {

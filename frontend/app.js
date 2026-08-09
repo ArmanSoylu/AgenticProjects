@@ -107,7 +107,10 @@
     const data = await api('/api/agents');
     state.agents = data.agents;
     state.models = data.models;
-    state.defaultModel = modelById(state.defaultModel) ? state.defaultModel : data.default_model;
+    // A model saved in this browser can become unusable later (e.g. Pro once the
+    // Gemini plan lapses), so never trust the stored id without re-checking.
+    const saved = modelById(state.defaultModel);
+    state.defaultModel = saved && saved.free_tier ? state.defaultModel : data.default_model;
     state.model = state.defaultModel;
     state.online = true;
     injectHues();
@@ -136,7 +139,8 @@
 
   function openAgent(id) {
     const a = agentById(id);
-    if (a) state.model = modelById(a.model) ? a.model : state.defaultModel;
+    const preferred = a ? modelById(a.model) : null;
+    if (a) state.model = preferred && preferred.free_tier ? a.model : state.defaultModel;
     state.draft = '';
     state.wantFocus = a && a.status === 'live';
     go({ type: 'agent', id });
@@ -451,9 +455,9 @@
                 'div',
                 { class: 'model-grid' },
                 state.models.map((m) =>
-                  h('div', { class: 'model-cell' },
+                  h('div', { class: 'model-cell' + (m.free_tier ? '' : ' locked') },
                     h('b', { class: 'mono' }, m.name),
-                    h('span', {}, t().notes[m.id] || ''),
+                    h('span', {}, m.free_tier ? (t().notes[m.id] || '') : t().models.paidOnly),
                     h('code', { class: 'mono' }, m.gemini_model))
                 )
               )
@@ -490,18 +494,23 @@
                 'button',
                 {
                   type: 'button', role: 'option',
-                  class: 'picker-item',
+                  class: 'picker-item' + (m.free_tier ? '' : ' locked'),
                   'aria-selected': String(m.id === state.model),
-                  onclick: () => { state.model = m.id; state.pickerOpen = false; render(); },
+                  disabled: !m.free_tier,
+                  title: m.free_tier ? m.gemini_model : t().models.paidOnly,
+                  onclick: m.free_tier
+                    ? () => { state.model = m.id; state.pickerOpen = false; render(); }
+                    : null,
                 },
                 h('span', { class: 'picker-tick' }, m.id === state.model ? '✓' : ''),
                 h(
                   'span',
                   { class: 'picker-main' },
                   h('span', { class: 'picker-name mono' }, m.name),
-                  h('span', { class: 'picker-note' }, t().notes[m.id] || m.gemini_model)
+                  h('span', { class: 'picker-note' },
+                    m.free_tier ? (t().notes[m.id] || m.gemini_model) : t().models.paidOnly)
                 ),
-                h('span', { class: 'picker-lat mono' }, m.latency)
+                h('span', { class: 'picker-lat mono' }, m.free_tier ? m.latency : '—')
               )
             )
           )
@@ -712,7 +721,13 @@
 
           settingsRow(t().settings.defaultModel, t().settings.defaultModelDesc,
             h('div', { class: 'seg mono' }, state.models.map((m) =>
-              h('button', { type: 'button', class: m.id === state.defaultModel ? 'active' : '', onclick: () => setDefaultModel(m.id) }, m.name)
+              h('button', {
+                type: 'button',
+                class: (m.id === state.defaultModel ? 'active' : '') + (m.free_tier ? '' : ' locked'),
+                disabled: !m.free_tier,
+                title: m.free_tier ? null : t().models.paidOnly,
+                onclick: m.free_tier ? () => setDefaultModel(m.id) : null,
+              }, m.name)
             ))),
 
           settingsRow(t().settings.backend, t().settings.backendDesc,

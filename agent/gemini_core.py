@@ -7,6 +7,9 @@ from core.logger import get_logger
 
 logger = get_logger("GeminiAgent")
 
+# Upper bound on the tool calls the SDK may chain inside a single turn.
+MAX_TOOL_CALLS_PER_TURN = 5
+
 system_prompt = """
 You are an advanced AI assistant with access to several tools.
 Think logically step-by-step to answer the user's questions.
@@ -56,6 +59,12 @@ def run_agent_turn(user_query: str, tools: list, model_id: str = DEFAULT_MODEL_I
             system_instruction=system_prompt,
             tools=tools,
             temperature=0.1,
+            # The SDK runs tool calls in a loop on its own. Its default ceiling is 10,
+            # which is long enough that a model guessing at an unresolvable place name
+            # looks like a hang. Real chains here are 1-2 calls, so 5 is plenty.
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                maximum_remote_calls=MAX_TOOL_CALLS_PER_TURN
+            ),
         )
 
         chat = client.chats.create(

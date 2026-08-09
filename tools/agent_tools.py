@@ -20,26 +20,50 @@ def get_weather_withAPI(location: str) -> str:
 
     try:
         #1.step Trying to get the geocoding
-        geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={location}&count=1&language=en&format=json"
-        geo_response = requests.get(geo_url).json()
+        geo_response = requests.get(
+            "https://geocoding-api.open-meteo.com/v1/search",
+            params={"name": location, "count": 1, "language": "en", "format": "json"},
+            timeout=10,
+        ).json()
 
-        if "results"  not in geo_response:
-            return "no information found for the city of {location}."
+        results = geo_response.get("results") or []
+        if not results:
+            # Telling the model not to retry matters: without it, it keeps guessing
+            # variations of the name and burns the whole function-calling budget.
+            return (
+                f"Location '{location}' was not found. Do not retry with another spelling. "
+                f"Ask the user for a nearby larger city or the country instead."
+            )
 
-        lat = geo_response["results"][0]["latitude"]
-        lon = geo_response["results"][0]["longitude"]
+        place = results[0]
+        lat = place["latitude"]
+        lon = place["longitude"]
 
         #2.step Wİth coordinates find the weather
-        weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
-        weather_response = requests.get(weather_url).json()
+        weather_response = requests.get(
+            "https://api.open-meteo.com/v1/forecast",
+            params={"latitude": lat, "longitude": lon, "current_weather": "true"},
+            timeout=10,
+        ).json()
 
         current = weather_response["current_weather"]
         temperature = current["temperature"]
         wind_speed = current["windspeed"]
 
+        # Reporting the matched place, not the query: geocoding sometimes resolves a
+        # district to a different town (Kadıköy -> Babadağ), and the model can only
+        # be honest about that if it can see what was actually matched.
+        matched = place.get("name", location)
+        country = place.get("country", "")
+        where = f"{matched}, {country}" if country else matched
 
-        return f"Current temperature in {location} is {temperature}°C. Wind speed is {wind_speed} km/h."
+        return (
+            f"Current temperature in {where} is {temperature}°C. "
+            f"Wind speed is {wind_speed} km/h. (matched from the query '{location}')"
+        )
 
+    except requests.Timeout:
+        return f"The weather service did not respond within 10 seconds for '{location}'. Tell the user to try again."
     except Exception as e:
         # just in case connections is established
         return f"API Error: {str(e)}"

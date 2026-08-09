@@ -142,3 +142,25 @@ If I want to find the Omega Alliance files, who should I talk to and where shoul
 2026-08-03 14:49:23 - [FastAPIServer] - INFO - The API is sending the answer.
 2026-08-09 14:03:38 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
 2026-08-09 14:03:41 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-08-09 23:42:11 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-08-09 23:42:11 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-08-09 23:42:42 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-08-09 23:42:42 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-08-09 23:50:10 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-08-09 23:50:11 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-08-09 23:50:15 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-08-09 23:50:15 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-08-09 23:50:15 - [GeminiAgent] - INFO - Starting Gemini Agent on gemini-3.5-flash-lite...
+2026-08-09 23:50:16 - [GeminiAgent] - INFO - User query: Zuhuratbaba mahallesinde hava nasil?
+2026-08-09 23:50:16 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-08-09 23:50:19 - [GeminiAgent] - INFO - Tools used: get_weather_withAPI
+2026-08-09 23:50:19 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-08-09 23:50:39 - [VectorDB] - INFO - Starting up ChromaDB:C:/Agents/agent_memory_db 
+2026-08-09 23:50:40 - [VectorDB] - INFO - successfully connected to ChromaDB
+2026-08-09 23:50:47 - [FastAPIServer] - INFO - A new query arrived to API 2+2 kac?
+2026-08-09 23:50:47 - [GeminiAgent] - INFO - Starting Gemini Agent on gemini-3.5-flash-lite...
+2026-08-09 23:50:47 - [GeminiAgent] - INFO - User query: 2+2 kac?
+2026-08-09 23:50:47 - [GeminiAgent] - INFO - Agent is thinking and starting up the tools
+2026-08-09 23:50:48 - [GeminiAgent] - INFO - Tools used: calculate
+2026-08-09 23:50:48 - [GeminiAgent] - INFO - Agent has created and answered successfully
+2026-08-09 23:50:48 - [FastAPIServer] - INFO - The API is sending the answer.
