@@ -1,0 +1,30 @@
+# Secrets — never commit the Gemini API key
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtualenv
+.venv/
+venv/
+
+# Agent data: ChromaDB lives here, it is state and not source
+agent_memory_db/
+memory.db
+
+# Logs
+*.log
+
+# PyCharm
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

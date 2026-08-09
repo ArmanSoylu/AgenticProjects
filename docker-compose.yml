@@ -1,0 +1,30 @@
+
+services:
+  backend:
+    build: .
+    container_name: agent_backend
+    # Uvicorn'u Docker içindeki ağa (0.0.0.0) açıyoruz.
+    # Bu servis hem /api'yi hem de workspace arayüzünü (/) sunuyor.
+    command: uvicorn server:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      # Kendi bilgisayarındaki veritabanını Docker'ın içine bağlıyoruz
+      - ./agent_memory_db:/app/agent_memory_db
+    environment:
+      # API anahtarını bilgisayarından çekip Docker'a aktarıyoruz
+      - gemini_api_key=${gemini_api_key}
+      # Windows yolu konteynerin içinde yok; ChromaDB'yi mount edilen klasöre yönlendiriyoruz
+      - AGENT_DB_PATH=/app/agent_memory_db
+
+  # Eski Streamlit arayüzü. Asıl arayüz artık http://localhost:8000 adresinde.
+  # Sadece buna ihtiyacın olduğunda:  docker compose --profile legacy up
+  frontend:
+    build: .
+    container_name: agent_frontend
+    profiles: ["legacy"]
+    command: streamlit run ui.py --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
