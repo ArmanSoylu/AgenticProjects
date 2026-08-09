@@ -22,8 +22,20 @@ Genel Azure rehberlerindeki komutlar bu projede olduğu gibi çalışmaz:
 **Azure for Students** aboneliğinde bir politika var: sadece şu bölgelere deploy edilebiliyor —
 `germanywestcentral`, `francecentral`, `switzerlandnorth`, `spaincentral`, `italynorth`.
 
-`westeurope` denenirse `RequestDisallowedByAzure` hatası gelir. Karlsruhe'ye en yakın olan
-**germanywestcentral** seçildi.
+`westeurope` → `RequestDisallowedByAzure` (politika dışı).
+`germanywestcentral` → `MaxNumberOfEnvironmentsInSubExceeded` (abonelikte hiç ortam olmamasına
+rağmen; yani gerçek kota değil, o bölgede bu abonelik tipine kapasite verilmiyor).
+
+Çalışan bölge: **`francecentral`**.
+
+### Bağımlılık sürümleri sabit olmalı
+
+`requirements.txt` sabitlenmemişken pip, Docker imajında `mcp`'yi `fastmcp`'nin bulunmadığı çok
+eski bir sürüme düşürüyordu. İmaj sorunsuz derleniyor, konteyner açılışta
+`ModuleNotFoundError: No module named 'mcp.server.fastmcp'` ile ölüyordu.
+
+Bu yüzden sürümler pinli ve workflow'da bir duman testi var: imaj push edilmeden önce
+konteynerin içinde `import server` çalıştırılıyor. Geçmezse push olmuyor.
 
 ---
 
@@ -72,13 +84,13 @@ az provider register --namespace Microsoft.App
 ```
 
 ```bash
-az group create --name rg-dreamer --location germanywestcentral
+az group create --name rg-dreamer --location francecentral
 ```
 
 `--logs-destination none` önemli: varsayılan davranış bir Log Analytics workspace açar, o da kotandan yer.
 
 ```bash
-az containerapp env create --name env-dreamer --resource-group rg-dreamer --location germanywestcentral --logs-destination none
+az containerapp env create --name env-dreamer --resource-group rg-dreamer --location francecentral --logs-destination none
 ```
 
 ## 4. Deploy
@@ -87,17 +99,17 @@ az containerapp env create --name env-dreamer --resource-group rg-dreamer --loca
 Bu komut anahtarı shell geçmişine yazar; sonrasında geçmişi temizlemek isteyebilirsin.
 
 ```bash
-az containerapp create --name dreamer --resource-group rg-dreamer --environment env-dreamer --image ghcr.io/armansoylu/dreamer-api:latest --target-port 7860 --ingress external --min-replicas 0 --max-replicas 1 --cpu 1.0 --memory 2.0Gi --secrets gemini-key=<ANAHTAR> --env-vars gemini_api_key=secretref:gemini-key
+az containerapp create --name armansoylu --resource-group rg-dreamer --environment env-dreamer --image ghcr.io/armansoylu/dreamer-api:latest --target-port 7860 --ingress external --min-replicas 0 --max-replicas 1 --cpu 1.0 --memory 2.0Gi --secrets gemini-key=<ANAHTAR> --env-vars gemini_api_key=secretref:gemini-key
 ```
 
-Çıktıdaki FQDN sitenin adresi: `https://dreamer.<hash>.germanywestcentral.azurecontainerapps.io`
+Çıktıdaki FQDN sitenin adresi: `https://armansoylu.<hash>.francecentral.azurecontainerapps.io`
 
 ## 5. Sonraki güncellemeler
 
 Kod değişince `git push` yeter — Actions yeni imajı basar. Sonra:
 
 ```bash
-az containerapp update --name dreamer --resource-group rg-dreamer --image ghcr.io/armansoylu/dreamer-api:latest
+az containerapp update --name armansoylu --resource-group rg-dreamer --image ghcr.io/armansoylu/dreamer-api:latest
 ```
 
 ---
@@ -125,7 +137,7 @@ Container Apps ücretsiz kotası (abonelik başına, aylık): **180.000 vCPU-san
 `/api/chat` açık ve kimlik doğrulaması yok. Adresi bulan herkes senin Gemini kotanı harcayabilir. Container Apps'te basit bir koruma:
 
 ```bash
-az containerapp ingress update --name dreamer --resource-group rg-dreamer --allow-insecure false
+az containerapp ingress update --name armansoylu --resource-group rg-dreamer --allow-insecure false
 ```
 
 Bu sadece HTTPS zorlar. Gerçek koruma için uygulamaya bir token kontrolü ya da rate limit eklemek gerekir.

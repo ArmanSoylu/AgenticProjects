@@ -1,10 +1,13 @@
-fastapi
-uvicorn
-streamlit
-google-genai
-chromadb
-requests
-simpleeval
-duckduckgo-search
-pydantic
-mcp
+# Sürümler sabit: sabitlenmediğinde pip, Docker imajında `mcp`'yi
+# fastmcp'nin bulunmadığı çok eski bir sürüme düşürüyor ve konteyner
+# "No module named 'mcp.server.fastmcp'" ile açılışta ölüyor.
+fastapi==0.139.0
+uvicorn==0.51.0
+streamlit==1.59.1
+google-genai==2.11.0
+chromadb==1.5.9
+requests==2.34.2
+simpleeval==1.0.7
+duckduckgo-search==8.1.1
+pydantic==2.13.4
+mcp==1.28.1
