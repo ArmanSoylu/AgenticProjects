@@ -5,7 +5,16 @@
 (function () {
   'use strict';
 
-  const GITHUB = 'github.com/darkmonger';
+  /* Kişisel bilgiler tek yerde: sidebar, profil ve dashboard buradan okuyor. */
+  const PROFILE = {
+    workspace: 'AI Workspace',
+    brandSub: 'arman · kit',
+    name: 'Arman',
+    initials: 'AK',
+    role: 'MSc CS · KIT',
+    github: 'github.com/ArmanSoylu',
+  };
+
   const STORE = 'aiw:';
 
   /* ── tiny DOM helper ──────────────────────────────────────── */
@@ -251,8 +260,8 @@
         h(
           'div',
           { class: 'lbl', style: { minWidth: 0, flex: 1 } },
-          h('div', { class: 'brand-name' }, 'AI Workspace'),
-          h('div', { class: 'brand-sub mono' }, 'arman · kit')
+          h('div', { class: 'brand-name' }, PROFILE.workspace),
+          h('div', { class: 'brand-sub mono' }, PROFILE.brandSub)
         ),
         h(
           'button',
@@ -329,12 +338,12 @@
         h(
           'div',
           { class: 'profile' },
-          h('div', { class: 'avatar mono' }, 'AK'),
+          h('div', { class: 'avatar mono' }, PROFILE.initials),
           h(
             'div',
             { class: 'lbl', style: { minWidth: 0, flex: 1 } },
-            h('div', { class: 'profile-name' }, 'Arman'),
-            h('div', { class: 'profile-sub mono' }, 'MSc CS · KIT')
+            h('div', { class: 'profile-name' }, PROFILE.name),
+            h('div', { class: 'profile-sub mono' }, PROFILE.role)
           ),
           h('button', {
             type: 'button', class: 'icon-btn lbl',
@@ -428,7 +437,13 @@
               ? h('span', { dataset: { agent: (live[0] || {}).id || '' } }, statusDot(true), t().dash.running(live.length))
               : h('span', { class: 'down' }, icon('alert', 12), t().dash.offline),
             h('span', {}, t().dash.dev(soon.length)),
-            h('span', {}, icon('github', 12), GITHUB)
+            h('a', {
+              href: 'https://' + PROFILE.github,
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              style: { display: 'flex', alignItems: 'center', gap: '6px', color: 'inherit', textDecoration: 'none' },
+              onclick: (e) => e.stopPropagation(),
+            }, icon('github', 12), PROFILE.github)
           )
         ),
 
@@ -785,7 +800,7 @@
           'div',
           { class: 'topbar' },
           h('button', { type: 'button', class: 'icon-btn', 'aria-label': t().nav.menu, onclick: () => { state.drawer = true; render(); } }, icon('menu', 18)),
-          h('span', { style: { fontSize: '13.5px', fontWeight: 600 } }, 'AI Workspace')
+          h('span', { style: { fontSize: '13.5px', fontWeight: 600 } }, PROFILE.workspace)
         ),
         mainContent()
       )
