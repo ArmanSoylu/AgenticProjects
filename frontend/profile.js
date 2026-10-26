@@ -9,7 +9,7 @@ window.PROFILE = {
   workspace: 'AI Workspace',
   brandSub: 'arman · kit',
   name: 'Arman',
-  initials: 'AK',
+  initials: 'AS',
   role: 'MSc CS · KIT',
   github: 'github.com/ArmanSoylu',
   email: 'armansoylu0@gmail.com',
