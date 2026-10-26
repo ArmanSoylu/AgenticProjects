@@ -160,6 +160,17 @@ if FRONTEND_DIR.exists():
     @app.get("/")
     async def index():
         return FileResponse(FRONTEND_DIR / "index.html")
+
+    # armansoylu.me/cv is the address to put on applications. "inline" opens
+    # the PDF in the browser instead of forcing a download.
+    @app.get("/cv")
+    async def cv():
+        return FileResponse(
+            FRONTEND_DIR / "cv" / "Arman_Soylu_CV.pdf",
+            media_type="application/pdf",
+            filename="Arman_Soylu_CV.pdf",
+            content_disposition_type="inline",
+        )
 else:
     logger.warning(f"Frontend directory not found at {FRONTEND_DIR}")
 

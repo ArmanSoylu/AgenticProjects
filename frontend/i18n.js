@@ -8,7 +8,7 @@ window.LANGS = [
 
 window.STR = {
   en: {
-    nav: { home: 'Home', projects: 'My Projects', settings: 'Settings', collapse: 'Collapse menu', expand: 'Expand menu', menu: 'Open menu', close: 'Close menu' },
+    nav: { home: 'Home', agents: 'Agents', projects: 'My Projects', settings: 'Settings', collapse: 'Collapse menu', expand: 'Expand menu', menu: 'Open menu', close: 'Close menu' },
     dash: {
       hi: 'Hi, Arman',
       intro: 'Every AI agent I build, under one roof. Pick an agent and start talking.',
@@ -38,7 +38,7 @@ window.STR = {
       failed: 'The agent could not finish this turn.',
       offline: 'The backend is not responding. Is server.py running on port 8000?',
     },
-    soon: { back: 'home', dev: 'in development', title: "What's coming in this agent", toolLine: 'runs step by step inside the chat flow.' },
+    soon: { back: 'agents', dev: 'in development', title: "What's coming in this agent", toolLine: 'runs step by step inside the chat flow.' },
     settings: {
       title: 'Workspace',
       language: 'Language', languageDesc: 'Interface language across the workspace.',
@@ -54,7 +54,7 @@ window.STR = {
   },
 
   de: {
-    nav: { home: 'Startseite', projects: 'Meine Projekte', settings: 'Einstellungen', collapse: 'Menü einklappen', expand: 'Menü ausklappen', menu: 'Menü öffnen', close: 'Menü schließen' },
+    nav: { home: 'Startseite', agents: 'Agenten', projects: 'Meine Projekte', settings: 'Einstellungen', collapse: 'Menü einklappen', expand: 'Menü ausklappen', menu: 'Menü öffnen', close: 'Menü schließen' },
     dash: {
       hi: 'Hallo, Arman',
       intro: 'Alle KI-Agenten, die ich entwickle, unter einem Dach. Wähle einen Agenten und leg los.',
@@ -84,7 +84,7 @@ window.STR = {
       failed: 'Der Agent konnte diesen Zug nicht abschließen.',
       offline: 'Das Backend antwortet nicht. Läuft server.py auf Port 8000?',
     },
-    soon: { back: 'startseite', dev: 'in Entwicklung', title: 'Was in diesem Agenten kommt', toolLine: 'läuft Schritt für Schritt im Chatverlauf.' },
+    soon: { back: 'agenten', dev: 'in Entwicklung', title: 'Was in diesem Agenten kommt', toolLine: 'läuft Schritt für Schritt im Chatverlauf.' },
     settings: {
       title: 'Arbeitsbereich',
       language: 'Sprache', languageDesc: 'Oberflächensprache im Arbeitsbereich.',
@@ -100,7 +100,7 @@ window.STR = {
   },
 
   tr: {
-    nav: { home: 'Ana Merkez', projects: 'Projelerim', settings: 'Ayarlar', collapse: 'Menüyü daralt', expand: 'Menüyü genişlet', menu: 'Menüyü aç', close: 'Menüyü kapat' },
+    nav: { home: 'Ana Sayfa', agents: 'Ajanlar', projects: 'Projelerim', settings: 'Ayarlar', collapse: 'Menüyü daralt', expand: 'Menüyü genişlet', menu: 'Menüyü aç', close: 'Menüyü kapat' },
     dash: {
       hi: 'Merhaba, Arman',
       intro: 'Geliştirdiğim yapay zekâ ajanları tek çatı altında. Bir ajan seç, konuşmaya başla.',
@@ -130,7 +130,7 @@ window.STR = {
       failed: 'Ajan bu turu tamamlayamadı.',
       offline: 'Backend yanıt vermiyor. server.py 8000 portunda çalışıyor mu?',
     },
-    soon: { back: 'ana merkez', dev: 'geliştirme aşamasında', title: 'Bu ajanda ne olacak', toolLine: 'aracı, sohbet akışının içinde adım adım çalışacak.' },
+    soon: { back: 'ajanlar', dev: 'geliştirme aşamasında', title: 'Bu ajanda ne olacak', toolLine: 'aracı, sohbet akışının içinde adım adım çalışacak.' },
     settings: {
       title: 'Çalışma alanı',
       language: 'Dil', languageDesc: 'Çalışma alanının arayüz dili.',

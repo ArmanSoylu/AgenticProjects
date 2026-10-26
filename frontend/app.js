@@ -5,15 +5,8 @@
 (function () {
   'use strict';
 
-  /* Kişisel bilgiler tek yerde: sidebar, profil ve dashboard buradan okuyor. */
-  const PROFILE = {
-    workspace: 'AI Workspace',
-    brandSub: 'arman · kit',
-    name: 'Arman',
-    initials: 'AK',
-    role: 'MSc CS · KIT',
-    github: 'github.com/ArmanSoylu',
-  };
+  /* Kişisel bilgiler profile.js'te: sidebar, ana sayfa ve dashboard oradan okuyor. */
+  const PROFILE = window.PROFILE;
 
   const STORE = 'aiw:';
 
@@ -73,7 +66,7 @@
     projectsOpen: true,
     pickerOpen: false,
 
-    view: { type: 'dashboard' },
+    view: { type: 'home' },
     model: 'flash-lite',
 
     agents: [],
@@ -84,6 +77,17 @@
     chats: {},      // agentId -> { messages: [], busy: false }
     draft: '',
     wantFocus: false,
+  };
+
+  /* Home page state lives outside `state` on purpose: its demos repaint their
+     own nodes, and none of these values should ever trigger a full redraw. */
+  const home = {
+    root: null,           // the home page's scroll container while it is mounted
+    scrollTop: 0,
+    revealed: new Set(),  // indices of [data-reveal] blocks already faded in
+    area: null,           // area pinned by a click/tap
+    areaHover: null,      // area previewed by hover/focus
+    traceStep: 0,
   };
 
   if (!window.STR[state.lang]) state.lang = 'en';
@@ -140,6 +144,9 @@
   function render() { draw(); }
 
   function go(view) {
+    // Navigating to home starts at the top; a redraw while already on it
+    // (language, theme) goes through render() and keeps the scroll position.
+    if (view.type === 'home') home.scrollTop = 0;
     state.view = view;
     state.pickerOpen = false;
     state.drawer = false;
@@ -278,7 +285,12 @@
         'nav',
         { class: 'nav scroll' },
         navRow({
-          icon: 'dashboard', label: t().nav.home,
+          icon: 'user', label: t().nav.home,
+          active: state.view.type === 'home',
+          onClick: () => go({ type: 'home' }),
+        }),
+        navRow({
+          icon: 'dashboard', label: t().nav.agents,
           active: state.view.type === 'dashboard',
           onClick: () => go({ type: 'dashboard' }),
         }),
@@ -364,6 +376,282 @@
     );
   }
 
+  /* ── home (about me) ──────────────────────────────────────── */
+  // Everything on this page that reacts to the pointer repaints its own nodes.
+  // Going through render() would rebuild the scroll container and throw the
+  // visitor back to the top of the page on every hover.
+  const land = () => window.LAND[state.lang] || window.LAND.en;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function syncHome() {
+    const root = home.root;
+    if (!root || !root.isConnected) return;
+    const rr = root.getBoundingClientRect();
+    const H = root.clientHeight;
+    const max = root.scrollHeight - H;
+
+    const prog = root.querySelector('.home-prog i');
+    if (prog) prog.style.width = (max > 0 ? (root.scrollTop / max) * 100 : 0) + '%';
+
+    root.querySelectorAll('[data-reveal]').forEach((el, i) => {
+      if (el.dataset.in === '1') return;
+      if (el.getBoundingClientRect().top < rr.bottom - 48) {
+        el.dataset.in = '1';
+        home.revealed.add(i);
+      }
+    });
+
+    // The timeline entry crossing 55% of the viewport is "current": the rail
+    // fills down to it and the sticky year shows its year.
+    const atEnd = max <= 0 || root.scrollTop >= max - 2;
+    const line = rr.top + H * 0.55;
+    const items = root.querySelectorAll('.tl-item');
+    let cur = items[0];
+    items.forEach((it) => { if (atEnd || it.getBoundingClientRect().top < line) cur = it; });
+    const fill = root.querySelector('.tl-fill');
+    if (fill && cur) fill.style.height = cur.offsetTop + 9 + 'px';
+    const year = root.querySelector('.tl-year');
+    if (year && cur) year.textContent = cur.dataset.year;
+  }
+
+  function tilt(e) {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    el.style.setProperty('--mx', x * 100 + '%');
+    el.style.setProperty('--my', y * 100 + '%');
+    if (reduceMotion.matches) return;
+    el.style.setProperty('--ry', (x - 0.5) * 6 + 'deg');
+    el.style.setProperty('--rx', (0.5 - y) * 6 + 'deg');
+  }
+
+  function untilt(e) {
+    e.currentTarget.style.setProperty('--rx', '0deg');
+    e.currentTarget.style.setProperty('--ry', '0deg');
+  }
+
+  // Causal self-attention mask over a short decoder sequence. Hovering a
+  // token highlights the keys that query may attend to.
+  function maskDemo(L) {
+    const toks = window.HOME.tokens;
+    const N = toks.length;
+    const PAD = N - 1;
+    const tokEls = [];
+    const cells = [];
+    const caption = h('div', { class: 'demo-line mono', 'aria-live': 'polite' });
+    let current = -1;
+
+    function paint(qi) {
+      let seen = 0;
+      let masked = 0;
+      for (let q = 0; q < N; q++) {
+        for (let k = 0; k < N; k++) {
+          const allowed = k !== PAD && k <= q;
+          let m = allowed ? 'on' : 'off';
+          if (qi >= 0 && q === qi) {
+            if (allowed) { m = 'hi'; seen = k; } else masked++;
+          } else if (qi >= 0 && allowed) {
+            m = 'dim';
+          }
+          cells[q * N + k].dataset.m = m;
+        }
+      }
+      tokEls.forEach((el, i) => el.classList.toggle('on', i === qi));
+      caption.textContent = qi < 0 ? L.mask.idle : L.mask.fmt(qi, seen, masked);
+    }
+
+    const enter = (i) => () => { current = i; paint(i); };
+    const leave = (i) => () => { if (current === i) { current = -1; paint(-1); } };
+    toks.forEach((text, i) => {
+      tokEls.push(h('button', {
+        type: 'button', class: 'tok mono',
+        onmouseenter: enter(i), onmouseleave: leave(i), onfocus: enter(i), onblur: leave(i),
+      }, text));
+    });
+    for (let c = 0; c < N * N; c++) cells.push(h('span', { class: 'cell' }));
+    paint(-1);
+
+    return h('div', { class: 'demo' },
+      h('div', { class: 'demo-label mono' }, L.mask.label),
+      h('div', { class: 'tok-row' }, tokEls),
+      h('div', { class: 'mask-grid', 'aria-hidden': 'true' }, cells),
+      caption);
+  }
+
+  // Step-through of what happens to one chat request on this site.
+  function traceDemo(L) {
+    const steps = L.trace.steps;
+    const items = steps.map((text, i) =>
+      h('li', {},
+        h('span', { class: 'tdot' }),
+        h('span', { class: 'tn' }, String(i + 1)),
+        h('span', {}, text)));
+    const btn = h('button', {
+      type: 'button', class: 'trace-btn mono',
+      onclick: () => {
+        home.traceStep = home.traceStep >= steps.length ? 0 : home.traceStep + 1;
+        paint();
+      },
+    });
+
+    function paint() {
+      items.forEach((li, i) => li.classList.toggle('on', i < home.traceStep));
+      btn.textContent = home.traceStep >= steps.length ? L.trace.reset : L.trace.next;
+    }
+    paint();
+
+    return h('div', { class: 'demo' },
+      h('div', { class: 'trace-head' }, h('span', { class: 'demo-label mono' }, L.trace.label), btn),
+      h('ol', { class: 'trace-list mono' }, items));
+  }
+
+  function linkBtn(href, iconName, label, external) {
+    return h('a', {
+      class: 'link-btn mono', href,
+      target: external ? '_blank' : null,
+      rel: external ? 'noopener noreferrer' : null,
+    }, icon(iconName, 13), label);
+  }
+
+  function homeView() {
+    const L = land();
+    const P = PROFILE;
+    const gh = 'https://' + P.github;
+
+    // Blocks already faded in keep data-in="1" across redraws, so switching
+    // language halfway down the page does not replay every entrance.
+    let revealIdx = 0;
+    const reveal = () => (home.revealed.has(revealIdx++) ? { reveal: '', in: '1' } : { reveal: '' });
+
+    const cards = [];
+    const chips = [];
+
+    function paintAreas() {
+      const active = home.areaHover || home.area;
+      chips.forEach((c) => {
+        c.el.classList.toggle('on', active === c.id);
+        c.el.setAttribute('aria-pressed', String(home.area === c.id));
+      });
+      cards.forEach((c) => c.el.classList.toggle('dim', !!active && c.areas.indexOf(active) < 0));
+    }
+
+    function projectCard(p, n) {
+      const copy = L.projects[p.id];
+      const tags = p.tags.concat(copy.tags || []);
+      let link = null;
+      if (p.link && p.link.kind === 'agent') {
+        link = h('button', { type: 'button', class: 'ink-link mono', onclick: () => openAgent(p.link.agent) },
+          copy.link, icon('arrow-right', 12));
+      } else if (p.link && p.link.kind === 'url') {
+        link = h('a', { class: 'ink-link mono', href: p.link.href, target: '_blank', rel: 'noopener noreferrer' },
+          L.links.github, icon('arrow-up-right', 12));
+      }
+
+      const el = h('article', { class: 'hcard', tabindex: '0', onmousemove: tilt, onmouseleave: untilt },
+        h('span', { class: 'sweep' }),
+        h('span', { class: 'ret' }, h('i'), h('i'), h('i'), h('i')),
+        h('div', { class: 'hcard-top' },
+          h('h2', {}, copy.title),
+          h('span', { class: 'hcard-meta mono' }, String(n).padStart(2, '0') + ' · ' + copy.meta)),
+        h('p', { class: 'hcard-body' }, copy.body),
+        p.demo === 'mask' ? maskDemo(L) : p.demo === 'trace' ? traceDemo(L) : null,
+        h('div', { class: 'hcard-foot' },
+          h('div', { class: 'tags' }, tags.map((x) => h('span', { class: 'tag mono' }, x))),
+          link));
+      cards.push({ el, areas: p.areas });
+      return el;
+    }
+
+    // Built in document order: reveal() numbers blocks as it is called.
+    const head = h('header', { class: 'home-head' },
+      h('div', {},
+        h('div', { class: 'home-name' }, P.fullName),
+        h('div', { class: 'home-role mono' }, L.role)),
+      h('div', { class: 'home-links' },
+        linkBtn(gh, 'github', L.links.github, true),
+        linkBtn('mailto:' + P.email, 'mail', L.links.email, false),
+        linkBtn(P.cv, 'file-text', L.links.cv, true)));
+
+    const hero = h('section', { class: 'hero' },
+      h('div', { class: 'status-pill mono' }, statusDot(true), L.status),
+      h('h1', {}, L.hero),
+      h('p', { class: 'hero-sub' }, L.sub),
+      h('div', { class: 'areas' },
+        window.HOME.areas.map((id, i) => {
+          const on = () => { home.areaHover = id; paintAreas(); };
+          const off = () => { if (home.areaHover === id) { home.areaHover = null; paintAreas(); } };
+          const el = h('button', {
+            type: 'button', class: 'area',
+            onmouseenter: on, onmouseleave: off, onfocus: on, onblur: off,
+            // Clearing the hover preview here matters on touch screens, where a
+            // tap also fires mouseenter and nothing ever fires mouseleave.
+            onclick: () => { home.area = home.area === id ? null : id; home.areaHover = null; paintAreas(); },
+          }, L.areas[i]);
+          chips.push({ id, el });
+          return el;
+        }),
+        h('span', { class: 'area-hint mono' }, L.areaHint)));
+
+    const projects = h('section', { class: 'sec', dataset: reveal() },
+      h('p', { class: 'sec-label mono' }, L.projectsTitle),
+      h('div', { class: 'proj-grid' }, window.HOME.projects.map((p, i) => projectCard(p, i + 1))));
+
+    const timeline = h('section', { class: 'sec' },
+      h('p', { class: 'sec-label mono', dataset: reveal() }, L.timelineTitle),
+      h('div', { class: 'tl' },
+        h('div', { class: 'tl-side' }, h('div', { class: 'tl-year' }, L.tl[0].year)),
+        h('div', { class: 'tl-track' },
+          h('div', { class: 'tl-rail' }),
+          h('div', { class: 'tl-fill' }),
+          h('div', { class: 'tl-items' }, L.tl.map((e) =>
+            h('div', { class: 'tl-item', dataset: Object.assign({ year: e.year }, reveal()) },
+              h('span', { class: 'tl-dot' }),
+              h('div', { class: 'tl-title-row' },
+                h('span', { class: 'tl-title' }, e.title),
+                e.now ? h('span', { class: 'tl-now mono' }, e.now) : null),
+              h('div', { class: 'tl-when mono' }, e.when + ' · ' + e.where),
+              e.line ? h('p', { class: 'tl-line' }, e.line) : null))))),
+      h('div', { class: 'langs-line mono', dataset: reveal() }, L.langs));
+
+    const stack = h('section', { class: 'sec', dataset: reveal() },
+      h('p', { class: 'sec-label mono' }, L.stackTitle),
+      h('div', { class: 'stack' }, window.HOME.stack.map((items, i) =>
+        h('div', { class: 'stack-row' },
+          h('span', { class: 'stack-name' }, L.stackNames[i]),
+          h('div', { class: 'tags' }, items.map((x) => h('span', { class: 'tag mono' }, x)))))));
+
+    const contact = h('section', { class: 'contact', dataset: reveal() },
+      h('div', { class: 'contact-inner' },
+        h('div', {}, h('h2', {}, L.contactTitle), h('p', {}, L.contactBody)),
+        h('div', { class: 'home-links' },
+          h('a', { class: 'btn-ink', href: 'mailto:' + P.email }, icon('mail', 15), P.email),
+          h('a', { class: 'btn-line', href: gh, target: '_blank', rel: 'noopener noreferrer' }, icon('github', 15), 'GitHub'))));
+
+    const foot = h('footer', { class: 'home-foot', dataset: reveal() },
+      h('div', { class: 'home-foot-l mono' },
+        h('span', {}, L.footer),
+        h('a', { href: gh, target: '_blank', rel: 'noopener noreferrer' }, P.github)),
+      h('div', { class: 'foot-lang' }, window.LANGS.map((l) =>
+        h('button', {
+          type: 'button', class: 'mono' + (l.id === state.lang ? ' active' : ''),
+          'aria-label': l.label, onclick: () => setLang(l.id),
+        }, l.code))));
+
+    const root = h('div', {
+      class: 'scroll',
+      onscroll: () => { home.scrollTop = root.scrollTop; syncHome(); },
+    },
+      h('div', { class: 'home-prog' }, h('i')),
+      h('div', { class: 'home' }, head, hero, projects, timeline, stack, contact, foot));
+
+    home.root = root;
+    paintAreas();
+    // Runs once the node is in the document, so the scroll can be restored.
+    queueMicrotask(() => { root.scrollTop = home.scrollTop; syncHome(); });
+    return root;
+  }
+
   /* ── dashboard ────────────────────────────────────────────── */
   function agentCard(a, wide) {
     const live = a.status === 'live';
@@ -426,7 +714,7 @@
         h(
           'header',
           {},
-          h('p', { class: 'eyebrow mono' }, t().nav.home),
+          h('p', { class: 'eyebrow mono' }, t().nav.agents),
           h('h1', { class: 'h1' }, t().dash.hi, h('span', { class: 'stop' }, '.')),
           h('p', { class: 'lead' }, t().dash.intro),
           h('div', { class: 'sheen', style: { background: `linear-gradient(90deg,${sheen})`, backgroundSize: '200% 100%' } }),
@@ -756,6 +1044,9 @@
 
   /* ── shell ────────────────────────────────────────────────── */
   function mainContent() {
+    // The home page needs nothing from the API, so it renders even if the
+    // agent registry failed to load.
+    if (state.view.type === 'home') return homeView();
     if (state.loadError) {
       return h('div', { class: 'scroll' }, h('div', { class: 'page narrow' },
         h('div', { class: 'soon-mark' }, icon('alert', 20)),
@@ -769,7 +1060,8 @@
       if (!a) return dashboard();
       return a.status === 'live' ? chatView(a) : soonView(a);
     }
-    return dashboard();
+    if (state.view.type === 'dashboard') return dashboard();
+    return homeView();
   }
 
   const root = document.getElementById('root');
@@ -800,7 +1092,7 @@
           'div',
           { class: 'topbar' },
           h('button', { type: 'button', class: 'icon-btn', 'aria-label': t().nav.menu, onclick: () => { state.drawer = true; render(); } }, icon('menu', 18)),
-          h('span', { style: { fontSize: '13.5px', fontWeight: 600 } }, PROFILE.workspace)
+          h('span', { style: { fontSize: '13.5px', fontWeight: 600 } }, PROFILE.fullName)
         ),
         mainContent()
       )
@@ -809,6 +1101,7 @@
     // data-ui-theme has to reach <html> too, so the page background matches.
     document.documentElement.setAttribute('data-ui-theme', state.theme);
     document.documentElement.setAttribute('data-vivid', state.vivid);
+    document.documentElement.lang = state.lang;
     root.className = '';
     root.replaceChildren(shell);
   }
@@ -824,6 +1117,7 @@
       render();
     }
   });
+  window.addEventListener('resize', syncHome);
 
   /* ── boot ─────────────────────────────────────────────────── */
   loadRegistry()

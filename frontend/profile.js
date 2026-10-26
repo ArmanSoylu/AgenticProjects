@@ -1,0 +1,197 @@
+/* ══════════════════════════════════════════════════════════════
+   Everything about me in one place: name, links, projects,
+   timeline and stack. The home page and the sidebar read from
+   here, so editing the site's personal content means editing
+   only this file.
+   ══════════════════════════════════════════════════════════════ */
+window.PROFILE = {
+  fullName: 'Arman Soylu',
+  workspace: 'AI Workspace',
+  brandSub: 'arman · kit',
+  name: 'Arman',
+  initials: 'AK',
+  role: 'MSc CS · KIT',
+  github: 'github.com/ArmanSoylu',
+  email: 'armansoylu0@gmail.com',
+  cv: '/cv',
+};
+
+/* Language-independent structure. Copy for each language lives in LAND. */
+window.HOME = {
+  tokens: ['<s>', 'the', 'cat', 'sat', 'down', '<pad>'],
+  areas: ['nlp', 'cv', 'agentic'],
+  // demo: which interactive widget the card carries ('mask', 'trace' or none).
+  // link.kind 'agent' opens a chat in this app, 'url' goes off-site.
+  projects: [
+    { id: 'p1', areas: ['nlp'], tags: ['PyTorch', 'Python'], demo: 'mask',
+      link: { kind: 'url', href: 'https://github.com/ArmanSoylu' } },
+    { id: 'p2', areas: ['nlp', 'agentic'], tags: ['FastAPI', 'MCP', 'Azure'], demo: 'trace',
+      link: { kind: 'agent', agent: 'research' } },
+    { id: 'p3', areas: ['nlp', 'agentic'], tags: ['LLMs', 'AWS', 'Python'] },
+    { id: 'p4', areas: ['cv'], tags: ['TensorFlow', 'OpenCV'] },
+  ],
+  stack: [
+    ['PyTorch', 'TensorFlow', 'Keras', 'Hugging Face', 'scikit-learn'],
+    ['Agentic RAG', 'MCP', 'LangChain', 'LoRA fine-tuning', 'Gemini API', 'Groq API'],
+    ['OpenCV', 'YOLO', 'EfficientNet', 'ResNet', 'Transformers', 'spaCy', 'NLTK'],
+    ['Python', 'FastAPI', 'React', 'Docker', 'Azure Container Apps', 'AWS', 'Git'],
+  ],
+};
+
+window.LAND = {
+  en: {
+    role: 'M.Sc. Computer Science · KIT · Karlsruhe',
+    status: 'M.Sc. student · Karlsruhe · open to ML roles',
+    hero: 'I build NLP and LLM systems, computer-vision models and agentic pipelines.',
+    sub: 'Working in ML since 2023: two industry internships, a Transformer written from scratch, and an agentic RAG system running in production on Azure.',
+    links: { github: 'GitHub', email: 'Email', cv: 'CV (PDF)' },
+    areas: ['NLP / LLMs', 'Computer vision', 'Agentic systems'],
+    areaHint: 'hover or tap to filter projects',
+    projectsTitle: 'Projects',
+    projects: {
+      p1: { title: 'Transformer from scratch', meta: 'personal project',
+        body: 'Encoder–decoder Transformer in pure PyTorch: multi-head attention, positional encoding, padding and causal masking. Trained end-to-end.' },
+      p2: { title: 'Agentic research assistant', meta: 'this site',
+        body: 'Gemini agent with function calling — web search, weather, math and a ChromaDB memory — whose tools are also served over MCP (SSE). FastAPI backend, dockerised on Azure Container Apps.',
+        link: 'Open the agent' },
+      p3: { title: 'Market research & outreach pipeline', meta: 'Digiole · internship',
+        body: 'Scrapes company data, drafts personalised outreach e-mails with LLMs, filters spam with NLP. Deployed on AWS with response tracking.' },
+      p4: { title: 'Object detection & classification', meta: 'Ditas · internship',
+        body: 'Real-time object detection and multi-class image classification with transfer learning — EfficientNet, ResNet and Xception compared against a custom CNN.',
+        tags: ['Transfer learning'] },
+    },
+    mask: {
+      label: 'decoder self-attention mask · hover or tab a token',
+      idle: 'Lower-triangular: each query sees itself and earlier keys. <pad> is always masked.',
+      fmt: (q, seen, masked) => 'query ' + q + ' → keys 0–' + seen + ' · ' + masked + ' masked (−∞ before softmax)',
+    },
+    trace: {
+      label: 'request trace · example', next: 'Next step', reset: 'Reset',
+      steps: [
+        'request hits FastAPI /api/chat',
+        'Gemini picks tools via function calling',
+        'search_web · weather · calculate · memory',
+        'results go back to Gemini, max 5 calls',
+        'answer + tool trace returned to the UI',
+      ],
+    },
+    timelineTitle: 'Timeline',
+    tl: [
+      { year: '2019', when: '2019 – 2024', title: 'B.Sc. Computer Engineering', where: 'Kastamonu University, Turkey', line: '' },
+      { year: '2021', when: '2021 – 2022', title: 'Exchange semester', where: 'PWSTE Jarosław, Poland', line: '' },
+      { year: '2024', when: 'Feb – Jul 2024', title: 'Machine Learning Intern', where: 'Ditas, Niğde', line: 'Real-time object detection, XGBoost spam filter, LLM-driven interview system (DIAS).' },
+      { year: '2024', when: 'Sep 2024 – 2025', title: 'Machine Learning Intern', where: 'Digiole, Helsinki', line: 'LLM market-research and outreach pipeline, spam detection, deployed on AWS.' },
+      { year: '2025', when: '2025 – present', title: 'M.Sc. Computer Science', where: 'Karlsruhe Institute of Technology', line: 'Focus: NLP / LLMs, computer vision, agentic systems.', now: 'now' },
+    ],
+    langs: 'English C1 · German A2 · Turkish native',
+    stackTitle: 'Stack',
+    stackNames: ['AI / ML', 'LLMs & agents', 'Vision & NLP', 'Dev & cloud'],
+    contactTitle: 'Get in touch',
+    contactBody: 'Questions about a project, a HiWi position, or something to build together — write me.',
+    footer: 'Karlsruhe, Germany',
+  },
+
+  de: {
+    role: 'M.Sc. Informatik · KIT · Karlsruhe',
+    status: 'M.Sc.-Student · Karlsruhe · offen für ML-Stellen',
+    hero: 'Ich baue NLP- und LLM-Systeme, Computer-Vision-Modelle und agentische Pipelines.',
+    sub: 'Seit 2023 im Bereich ML: zwei Industriepraktika, ein von Grund auf geschriebener Transformer und ein agentisches RAG-System, das produktiv auf Azure läuft.',
+    links: { github: 'GitHub', email: 'E-Mail', cv: 'Lebenslauf (PDF)' },
+    areas: ['NLP / LLMs', 'Computer Vision', 'Agentische Systeme'],
+    areaHint: 'Hover oder Tippen filtert die Projekte',
+    projectsTitle: 'Projekte',
+    projects: {
+      p1: { title: 'Transformer von Grund auf', meta: 'eigenes Projekt',
+        body: 'Encoder–Decoder-Transformer in reinem PyTorch: Multi-Head-Attention, Positional Encoding, Padding- und kausale Maskierung. End-to-end trainiert.' },
+      p2: { title: 'Agentischer Recherche-Assistent', meta: 'diese Seite',
+        body: 'Gemini-Agent mit Function Calling — Websuche, Wetter, Rechnen und ein ChromaDB-Gedächtnis —, dessen Tools zusätzlich per MCP (SSE) bereitstehen. FastAPI-Backend, dockerisiert auf Azure Container Apps.',
+        link: 'Agent öffnen' },
+      p3: { title: 'Marktrecherche- & Outreach-Pipeline', meta: 'Digiole · Praktikum',
+        body: 'Sammelt Firmendaten per Scraping, verfasst personalisierte E-Mails mit LLMs, filtert Spam mit NLP. Auf AWS deployt, mit Antwort-Tracking.' },
+      p4: { title: 'Objekterkennung & Klassifikation', meta: 'Ditas · Praktikum',
+        body: 'Echtzeit-Objekterkennung und Mehrklassen-Bildklassifikation mit Transfer Learning — EfficientNet, ResNet und Xception im Vergleich zu einem eigenen CNN.',
+        tags: ['Transfer Learning'] },
+    },
+    mask: {
+      label: 'Decoder-Self-Attention-Maske · Token per Hover oder Tab wählen',
+      idle: 'Untere Dreiecksmatrix: jede Query sieht sich selbst und frühere Keys. <pad> ist immer maskiert.',
+      fmt: (q, seen, masked) => 'Query ' + q + ' → Keys 0–' + seen + ' · ' + masked + ' maskiert (−∞ vor Softmax)',
+    },
+    trace: {
+      label: 'Request-Trace · Beispiel', next: 'Nächster Schritt', reset: 'Zurücksetzen',
+      steps: [
+        'Anfrage erreicht FastAPI /api/chat',
+        'Gemini wählt Tools per Function Calling',
+        'search_web · Wetter · Rechnen · Gedächtnis',
+        'Ergebnisse zurück an Gemini, max. 5 Aufrufe',
+        'Antwort + Tool-Trace gehen an die UI',
+      ],
+    },
+    timelineTitle: 'Zeitleiste',
+    tl: [
+      { year: '2019', when: '2019 – 2024', title: 'B.Sc. Computer Engineering', where: 'Kastamonu-Universität, Türkei', line: '' },
+      { year: '2021', when: '2021 – 2022', title: 'Austauschsemester', where: 'PWSTE Jarosław, Polen', line: '' },
+      { year: '2024', when: 'Feb – Jul 2024', title: 'Machine-Learning-Praktikant', where: 'Ditas, Niğde', line: 'Echtzeit-Objekterkennung, XGBoost-Spamfilter, LLM-gestütztes Interviewsystem (DIAS).' },
+      { year: '2024', when: 'Sep 2024 – 2025', title: 'Machine-Learning-Praktikant', where: 'Digiole, Helsinki', line: 'LLM-Marktrecherche- und Outreach-Pipeline, Spam-Erkennung, Deployment auf AWS.' },
+      { year: '2025', when: '2025 – heute', title: 'M.Sc. Informatik', where: 'Karlsruher Institut für Technologie', line: 'Schwerpunkt: NLP / LLMs, Computer Vision, agentische Systeme.', now: 'jetzt' },
+    ],
+    langs: 'Englisch C1 · Deutsch A2 · Türkisch Muttersprache',
+    stackTitle: 'Stack',
+    stackNames: ['AI / ML', 'LLMs & Agenten', 'Vision & NLP', 'Dev & Cloud'],
+    contactTitle: 'Kontakt',
+    contactBody: 'Fragen zu einem Projekt, einer HiWi-Stelle oder einer Idee zum gemeinsamen Bauen — schreiben Sie mir.',
+    footer: 'Karlsruhe, Deutschland',
+  },
+
+  tr: {
+    role: 'Bilgisayar Bilimleri Y.L. · KIT · Karlsruhe',
+    status: 'Y.L. öğrencisi · Karlsruhe · ML rollerine açık',
+    hero: "NLP ve LLM sistemleri, bilgisayarlı görü modelleri ve ajan tabanlı pipeline'lar geliştiriyorum.",
+    sub: "2023'ten beri ML alanındayım: iki sektör stajı, sıfırdan yazılmış bir Transformer ve Azure üzerinde canlı çalışan bir ajan tabanlı RAG sistemi.",
+    links: { github: 'GitHub', email: 'E-posta', cv: 'CV (PDF)' },
+    areas: ['NLP / LLM', 'Bilgisayarlı görü', 'Ajan sistemleri'],
+    areaHint: 'projeleri filtrelemek için üzerine gel veya dokun',
+    projectsTitle: 'Projeler',
+    projects: {
+      p1: { title: 'Sıfırdan Transformer', meta: 'kişisel proje',
+        body: 'Saf PyTorch ile encoder–decoder Transformer: multi-head attention, positional encoding, padding ve causal masking. Uçtan uca eğitildi.' },
+      p2: { title: 'Ajan tabanlı araştırma asistanı', meta: 'bu site',
+        body: 'Function calling kullanan Gemini ajanı — web araması, hava durumu, hesaplama ve ChromaDB hafızası; araçları MCP (SSE) üzerinden de sunuluyor. FastAPI backend, Azure Container Apps üzerinde dockerize.',
+        link: 'Ajanı aç' },
+      p3: { title: "Pazar araştırması ve outreach pipeline'ı", meta: 'Digiole · staj',
+        body: 'Şirket verisini scraping ile toplar, LLM ile kişiselleştirilmiş e-posta yazar, NLP ile spam filtreler. AWS üzerinde yanıt takibiyle yayında.' },
+      p4: { title: 'Nesne tespiti ve sınıflandırma', meta: 'Ditas · staj',
+        body: 'Transfer learning ile gerçek zamanlı nesne tespiti ve çok sınıflı görüntü sınıflandırma — EfficientNet, ResNet ve Xception, özel bir CNN ile karşılaştırıldı.',
+        tags: ['Transfer learning'] },
+    },
+    mask: {
+      label: "decoder self-attention maskesi · bir token'a gel veya Tab ile seç",
+      idle: 'Alt üçgen: her sorgu kendisini ve önceki anahtarları görür. <pad> her zaman maskeli.',
+      fmt: (q, seen, masked) => 'sorgu ' + q + ' → anahtar 0–' + seen + ' · ' + masked + ' maskeli (softmax öncesi −∞)',
+    },
+    trace: {
+      label: 'istek izi · örnek', next: 'Sonraki adım', reset: 'Sıfırla',
+      steps: [
+        "istek FastAPI /api/chat'e ulaşır",
+        'Gemini araçları function calling ile seçer',
+        'search_web · hava · hesap · hafıza',
+        "sonuçlar Gemini'ye döner, en fazla 5 çağrı",
+        'yanıt + araç izi arayüze döner',
+      ],
+    },
+    timelineTitle: 'Zaman çizelgesi',
+    tl: [
+      { year: '2019', when: '2019 – 2024', title: 'Bilgisayar Mühendisliği Lisans', where: 'Kastamonu Üniversitesi', line: '' },
+      { year: '2021', when: '2021 – 2022', title: 'Değişim dönemi', where: 'PWSTE Jarosław, Polonya', line: '' },
+      { year: '2024', when: 'Şub – Tem 2024', title: 'Makine Öğrenmesi Stajyeri', where: 'Ditas, Niğde', line: 'Gerçek zamanlı nesne tespiti, XGBoost spam filtresi, LLM tabanlı mülakat sistemi (DIAS).' },
+      { year: '2024', when: 'Eyl 2024 – 2025', title: 'Makine Öğrenmesi Stajyeri', where: 'Digiole, Helsinki', line: "LLM ile pazar araştırması ve outreach pipeline'ı, spam tespiti, AWS üzerinde yayın." },
+      { year: '2025', when: '2025 – devam', title: 'Bilgisayar Bilimleri Y.L.', where: 'Karlsruhe Teknoloji Enstitüsü', line: 'Odak: NLP / LLM, bilgisayarlı görü, ajan sistemleri.', now: 'şimdi' },
+    ],
+    langs: 'İngilizce C1 · Almanca A2 · Türkçe ana dil',
+    stackTitle: 'Teknolojiler',
+    stackNames: ['AI / ML', 'LLM & ajanlar', 'Görü & NLP', 'Geliştirme & bulut'],
+    contactTitle: 'İletişim',
+    contactBody: 'Bir proje, HiWi pozisyonu ya da birlikte geliştirilecek bir fikir hakkında soru varsa yazın.',
+    footer: 'Karlsruhe, Almanya',
+  },
+};
